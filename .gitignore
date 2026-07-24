@@ -1,0 +1,24 @@
+# --- secrets (절대 커밋 금지) ---
+.env
+*.key
+*.pem
+secrets*.json
+
+# --- python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- 선배 CHIMERA 공격 코드/데이터 (미공개 → 이 레포에 올리지 말 것) ---
+chimera_core.py
+harness*.py
+*_Template.md
+scenario_gen_template*.md
+strategy_db.json
+vuln_db.json
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
