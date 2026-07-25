@@ -1,11 +1,6 @@
 """
 prompt_level_defenses.py — 2차a 프롬프트단 방어 (a안=KAD 탐지, a'안=예방)
 
-  a안  : Known-Answer Detection (KAD).  근거: Liu et al., USENIX Security 2024 (arXiv:2310.12815).
-         정답(secret) 프로브를 record에 붙여, record가 프로브를 탈선시키면(secret 미출력) 오염으로 판정.
-         (+ 보조: 엔티티 정합성 판정 — 우리 add-on, 논문 아님.)
-  a'안 : Instruction Hierarchy (OpenAI, 2404.13208) + Spotlighting (Microsoft, 2403.14720).
-
 LLM 백엔드는 주입식: KAD는 텍스트 출력(llm_text), 보조/게이트는 JSON(llm_json).
 데모는 mock(키 불필요), 실전은 USE_GEMINI=1 + CHIMERA(chimera_core) on PYTHONPATH + GOOGLE_API_KEY.
 """
@@ -111,8 +106,6 @@ def gemini_json(prompt):
 
 # 데모용 mock — real Gemini 동작을 충실히 흉내(중요):
 #  KAD는 "명령형 override 주입"에만 hijack됨(선언형 매핑엔 안 넘어감) → real KAD와 일치.
-#    (예전 mock은 선언형에도 hijack된다고 가정해서 real과 괴리가 났음 → 여기서 수정.)
-#  aux(엔티티 정합성)는 "질문↔추론 타깃 remap"을 잡음 → real aux와 일치.
 _KAD_HIJACK = re.compile(r"ignore (?:all|the|previous|prior)|disregard|do not (?:follow|obey)|"
                          r"instead[,: ].{0,40}(output|say|print|reply|do)|override (?:the|your)", re.I)
 _REMAP = re.compile(r"catalogued under|stored under|saved under|filed under|refer to the|mapped to|"
