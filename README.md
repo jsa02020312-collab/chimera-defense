@@ -46,7 +46,7 @@ USE_GEMINI=1 python subagent_memory_governance.py
 > `chimera_core.py`를 함께 배치해야 한다. judge 모델은 `chimera_core`의 `gemini-2.5-flash`.
 > 논문 비교 시 judge를 GPT-4o로 바꾸려면 `gemini_text`/`gemini_json`만 교체.
 
-## 정직한 한계 (논문에 명시)
+## 한계.....?
 
 - The asymmetric defense profile remains a hypothesis and should be validated using ISR, ASR, and false-positive measurements.
 - **각색**: KAD·Instruction Hierarchy·Spotlighting은 원래 *프롬프트 인젝션* 방어 →
