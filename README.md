@@ -60,7 +60,6 @@ USE_GEMINI=1 python subagent_memory_governance.py
 ## 참고문헌
 
 - KAD: Liu et al., *Formalizing and Benchmarking Prompt Injection Attacks and Defenses*, USENIX Security 2024. arXiv:2310.12815
-- DataSentinel (KAD 발전형): IEEE S&P 2025. arXiv:2504.11358
 - Spotlighting: Hines et al. (Microsoft). arXiv:2403.14720
 - Instruction Hierarchy: Wallace et al. (OpenAI). arXiv:2404.13208
 - A-MemGuard: arXiv:2510.02373
