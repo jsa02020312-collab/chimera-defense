@@ -1,10 +1,8 @@
 """
-integration_test.py — [1순위] 선배 CHIMERA 공격의 '실제 출력'을 방어에 통과시키는 통합 테스트.
+integration_test.py — [1순위] CHIMERA 공격의 '실제 출력'을 방어에 통과시키는 통합 테스트.
 
 핵심: CHIMERA 공격 출력(strategy_db.json)은 (query, trace) record가 아니라
-  'conventions'(각인된 독립 .md 노트들) + 'trigger'(발동 요청) 형태다.
-  → 이제 방어의 '노트 환경 어댑터'(detect_note/detect_aux_note)로 그대로 검사한다.
-     (이전엔 conventions를 (query,trace)에 억지 매핑해서 오탐(FP)이 났음 — 노트 어댑터로 해소.)
+  'conventions'(각인된 독립 .md 노트들) + 'trigger'(발동 요청) 형태
 
 trigger는 참고용(나중에 사용자가 던지는 발동 요청)으로만 출력. 판정은 각 convention 노트 단위.
 
