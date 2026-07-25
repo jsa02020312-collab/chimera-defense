@@ -4,9 +4,9 @@ Defense suite for the **CHIMERA** project — memory-poisoning of LLM agents.
 Prompt-level (KAD, Spotlighting, Instruction Hierarchy) and sub-agent memory
 governance (A-MemGuard) defenses, benchmarked against **MINJA** and **CHIMERA**.
 
-핵심 가설: 각 방어는 **MINJA는 붕괴시키고 CHIMERA는 통과**시킨다 (비대칭).
-CHIMERA가 생존하는 이유는 방어가 약해서가 아니라, 조각이 개별 무해·참이고 악성이
-**결합에서 창발**하기 때문 — 즉 기존 방어 지형(프롬프트단·구조적) 밖의 위협.
+핵심 가설: 
+기존 방어(KAD, Instruction Hierarchy, Spotlighting, A-MemGuard)는
+MINJA에는 효과적이지만 CHIMERA에는 상대적으로 취약할 것으로 예상한다.
 
 ## 파일
 
@@ -17,8 +17,13 @@ CHIMERA가 생존하는 이유는 방어가 약해서가 아니라, 조각이 �
 
 ## 방어 사다리
 
-무방어(MINJA) → **a안**(per-item 탐지) → **a′안**(per-item 예방) → **b안**(cross-item 합의) → 상용.
-baseline(OEP식 naive auditor)은 비교축.
+Defense ladder
+
+No defense
+→ Prompt detection (KAD)
+→ Prompt prevention (Instruction Hierarchy + Spotlighting)
+→ Sub-agent memory governance
+→ Commercial agents
 
 ## 실행
 
@@ -43,7 +48,7 @@ USE_GEMINI=1 python subagent_memory_governance.py
 
 ## 정직한 한계 (논문에 명시)
 
-- **비대칭은 가설** → ISR/ASR/false-positive 실측 필요.
+- The asymmetric defense profile remains a hypothesis and should be validated using ISR, ASR, and false-positive measurements.
 - **각색**: KAD·Instruction Hierarchy·Spotlighting은 원래 *프롬프트 인젝션* 방어 →
   *메모리 포이즈닝* 맥락으로 각색(검색 메모리 = in-context 비신뢰 콘텐츠). Instruction
   Hierarchy는 훈련 기법 → 프롬프트 정책으로 각색.
