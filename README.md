@@ -17,7 +17,6 @@ MINJA(단일 divergent 기록)에는 효과적이지만, CHIMERA(개별 무해·
 | `integration_test.py` | **2차a 실행기** — 실제 `.md` 노트(exp2 poison / exp1 benign)에 통과 | — |
 | `subagent_memory_governance.py` | **2차b 엔진** — sub-agent R/W 검열 + A-MemGuard consensus + lesson | A-MemGuard (arXiv:2510.02373) |
 | `governance_integration.py` | **2차b 실행기(King_Stub 실배선)** — 실제 `.md` 노트에 통과 | — |
-| `list_gemini_models.py` | (유틸) 현재 키로 사용 가능한 Gemini 모델 목록 출력 | — |
 
 - **엔진**은 판정 로직을 정의(단독 실행 시 손으로 쓴 예시로 데모).
 - **실행기**가 엔진을 import 해서 **진짜 공격 산출물**에 돌린다 → 실제 평가는 실행기 2개로.
@@ -35,7 +34,6 @@ No defense
 
 직접 실행하는 파일은 **실행기 2개**: `integration_test.py`(2차a), `governance_integration.py`(2차b).
 백엔드는 주입식 — **mock / gemini / gpt** 중 환경변수로 선택.
-자세한 실행 조건·주의사항은 [`README_실행조건.md`](README_실행조건.md) 참고.
 
 **mock (키 불필요, 동작 확인)**
 ```bash
@@ -46,7 +44,7 @@ python governance_integration.py
 **GPT**
 ```bash
 export USE_GPT=1
-export OPENAI_API_KEY=sk-...          # openai 패키지 필요: pip install openai
+export OPENAI_API_KEY=sk-...          
 python integration_test.py
 python governance_integration.py
 ```
@@ -76,7 +74,7 @@ python governance_integration.py
 - **KAD는 강한 모델(GPT-4o)에서 명령형 주입도 잘 못 잡음(높은 FNR)** → 실질 탐지는 aux가 담당.
 - 정량 수치(ISR/ASR/FPR)와 공격 루프 내 방어(ASR) 검증은 랩 서버(King_Stub 라이브) 몫.
 
-## 한계
+## 한계...?
 
 - The asymmetric defense profile remains a hypothesis and should be validated using ISR, ASR, and false-positive measurements.
 - **각색**: KAD·Instruction Hierarchy·Spotlighting은 원래 *프롬프트 인젝션* 방어 →
