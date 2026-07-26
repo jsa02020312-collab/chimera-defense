@@ -1,6 +1,12 @@
 """
 subagent_memory_governance.py — 2차b sub-agent 메모리 거버넌스 (A-MemGuard 근거, King_Stub 방식)
 
+선배 지시: OEP식 "LLM 하나 더 붙이기"(외부 auditor)가 아니라, 메모리를 이미 관리하는
+sub-agent 자체가 R/W 검열을 한다.
+  WRITE : 각인 전 정합성 게이트          (우리 add-on. A-MemGuard 본체 아님)
+  READ  : A-MemGuard consensus 검증       (다수 합의에서 이탈한 경로=이상치 탐지) + lesson 메모리
+          (= A-MemGuard 본체, read-side)
+
 핵심: MINJA(단일 divergent 기록)는 합의에서 벗어나 탐지 → 붕괴.
      CHIMERA(합의-정합적 참 조각들)는 이상치가 없어 통과 → 생존. 악성은 결합 창발이라 합의가 못 봄.
 
@@ -93,12 +99,31 @@ class MemorySubAgent:
 def gemini_json(prompt):
     import chimera_core as C           # type: ignore  # 런타임에 PYTHONPATH=[-]_CHIMERA로 해결
     from google.genai import types as gt  # type: ignore  # pip install google-genai
-    # gemini-2.5-flash thinking으로 400이 작으면 JSON 잘림 → 넉넉히 + 파싱 실패 시 안전 기본값(fail-open)
+    if os.environ.get("GEMINI_MODEL"): C.GM = os.environ["GEMINI_MODEL"]   # 모델 교체(2.5-flash 단종 대응)
+    # thinking으로 max가 작으면 JSON 잘림 → 넉넉히 + 파싱 실패 시 안전 기본값(fail-open)
     txt = C.gj("", [gt.Content(role="user", parts=[gt.Part(text=prompt)])], 0, 2048, True)
     try:
         return C.pj(txt)
     except Exception:
         return {}   # 파싱 실패 시: write→store=True(통과), read→anomalous 없음(통과)
+
+# ── LLM 백엔드 (2) — OpenAI GPT (Gemini와 동일 계약: 단일 user 메시지 → JSON) ──
+# 실전 사용 시 pip install openai + OPENAI_API_KEY. 모델은 OPENAI_MODEL(기본 gpt-4o)로 교체 가능.
+def gpt_json(prompt):
+    from openai import OpenAI          # pip install openai
+    import time
+    client = OpenAI()                  # OPENAI_API_KEY 자동 사용
+    for att in range(4):               # Gemini와 동일한 retry/backoff
+        try:
+            r = client.chat.completions.create(
+                model=os.environ.get("OPENAI_MODEL", "gpt-4o"),
+                messages=[{"role": "user", "content": prompt}], temperature=0,
+                max_tokens=2048, response_format={"type": "json_object"})
+            txt = (r.choices[0].message.content or "").strip()
+            m = re.search(r"\{.*\}", txt, re.S); return json.loads(m.group(0) if m else txt)
+        except Exception:
+            time.sleep(2 * (att + 1))
+    return {}   # 최종 실패 시 fail-open(통과) — gemini_json과 동일
 
 def _target(trace):                                      # trace가 향하는 타깃 엔티티 추출(mock)
     m = re.search(r"(?:select|pick|choose|refer to)\s+(?:the\s+)?([a-z ]+?)(?:\s+[A-Z0-9]{5,}|\.|$)", trace, re.I)
