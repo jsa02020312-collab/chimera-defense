@@ -9,7 +9,7 @@ governance (A-MemGuard) defenses, benchmarked against **MINJA** and **CHIMERA**.
 MINJA(단일 divergent 기록)에는 효과적이지만, CHIMERA(개별 무해·상호 정합적인 조각들의
 결합 창발)에는 상대적으로 취약할 것으로 예상한다.
 
-## 구조 — 각 층 = [엔진 + 실행기]
+## 구조 = [엔진 + 실행기]
 
 | 파일 | 역할 | 근거(권위) |
 |---|---|---|
