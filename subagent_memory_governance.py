@@ -1,14 +1,9 @@
 """
 subagent_memory_governance.py — 2차b sub-agent 메모리 거버넌스 (A-MemGuard 근거, King_Stub 방식)
 
-선배 지시: OEP식 "LLM 하나 더 붙이기"(외부 auditor)가 아니라, 메모리를 이미 관리하는
-sub-agent 자체가 R/W 검열을 한다.
   WRITE : 각인 전 정합성 게이트          (우리 add-on. A-MemGuard 본체 아님)
   READ  : A-MemGuard consensus 검증       (다수 합의에서 이탈한 경로=이상치 탐지) + lesson 메모리
           (= A-MemGuard 본체, read-side)
-
-핵심: MINJA(단일 divergent 기록)는 합의에서 벗어나 탐지 → 붕괴.
-     CHIMERA(합의-정합적 참 조각들)는 이상치가 없어 통과 → 생존. 악성은 결합 창발이라 합의가 못 봄.
 
 실전은 저자 공개코드(github.com/TangciuYueng/AMemGuard)를 consensus/lesson 엔진으로 쓰길 권장.
 아래는 설계 시연용 mock(키 불필요). 실전은 USE_GEMINI=1 + CHIMERA(chimera_core) on PYTHONPATH + GOOGLE_API_KEY.
